@@ -114,15 +114,21 @@ export function ModuleProjects({ onGoto, user, onSetScheme }: { onGoto?: (k: any
     }
   };
 
-  const removeScheme = async (projectID: string, schemeNo: number) => {
-    await supabase.from("GEAR_TRANS").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
-    await supabase.from("CHAIN_TRANS").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
-    await supabase.from("TRANSMISSION").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
-    await supabase.from("DESIGN_SCHEME").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
+  const removeScheme = async (projectID: string | number, schemeNo: number) => {
+    const { error: e1 } = await supabase.from("GEAR_TRANS").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
+    const { error: e2 } = await supabase.from("CHAIN_TRANS").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
+    const { error: e3 } = await supabase.from("TRANSMISSION").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
+    const { error: e4 } = await supabase.from("DESIGN_SCHEME").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
     
+    if (e4) {
+      console.error("Delete Scheme Error:", e4);
+      alert("Lỗi xoá scheme: " + e4.message);
+      return;
+    }
+
     setProjects((prev) =>
       prev.map((p) =>
-        p.projectID === projectID ? { ...p, schemes: p.schemes.filter(s => s.schemeNo !== schemeNo) } : p
+        p.projectID == projectID ? { ...p, schemes: p.schemes.filter(s => s.schemeNo !== schemeNo) } : p
       )
     );
   };
