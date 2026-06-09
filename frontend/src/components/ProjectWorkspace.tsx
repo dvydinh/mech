@@ -31,6 +31,7 @@ export function ProjectWorkspace({
   onBack,
   onAddScheme,
   onOpenScheme,
+  onDeleteScheme,
   onRunPipeline,
 }: {
   project: Project;
