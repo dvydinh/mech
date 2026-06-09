@@ -114,6 +114,19 @@ export function ModuleProjects({ onGoto, user, onSetScheme }: { onGoto?: (k: any
     }
   };
 
+  const removeScheme = async (projectID: string, schemeNo: number) => {
+    await supabase.from("GEAR_TRANS").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
+    await supabase.from("CHAIN_TRANS").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
+    await supabase.from("TRANSMISSION").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
+    await supabase.from("DESIGN_SCHEME").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
+    
+    setProjects((prev) =>
+      prev.map((p) =>
+        p.projectID === projectID ? { ...p, schemes: p.schemes.filter(s => s.schemeNo !== schemeNo) } : p
+      )
+    );
+  };
+
   const addScheme = async (projectID: string, s: Scheme) => {
     const { error } = await supabase.from("DESIGN_SCHEME").insert({
       projectID: parseInt(projectID),
@@ -168,6 +181,7 @@ export function ModuleProjects({ onGoto, user, onSetScheme }: { onGoto?: (k: any
               motorCode: s.motorCode,
             })
           }
+          onDeleteScheme={(no) => removeScheme(p.projectID, no)}
           onRunPipeline={(s) => {
             if (onSetScheme) onSetScheme({ projectID: parseInt(p.projectID), schemeNo: s.schemeNo });
             if (onGoto) onGoto("optimizer");

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Card, Field, Select, Button, Badge } from "./ui-bits";
-import { ArrowLeft, Plus, Play, FileText, Sparkles, ArrowUpRight, X, FolderKanban, Lollipop } from "lucide-react";
+import { ArrowLeft, Plus, Play, FileText, Sparkles, ArrowUpRight, X, FolderKanban, Lollipop, Trash2 } from "lucide-react";
 
 export type Scheme = {
   schemeNo: number;
@@ -37,6 +37,7 @@ export function ProjectWorkspace({
   onBack: () => void;
   onAddScheme: (s: Scheme) => void;
   onOpenScheme: (s: Scheme) => void;
+  onDeleteScheme: (schemeNo: number) => void;
   onRunPipeline: (s: Scheme) => void;
 }) {
   const sortedSchemes = [...project.schemes].sort((a, b) => b.date.localeCompare(a.date) || b.schemeNo - a.schemeNo);
@@ -207,16 +208,25 @@ export function ProjectWorkspace({
                           <Badge tone={statusTone[s.status]}>{statusLabel[s.status]}</Badge>
                         </td>
                         <td className="py-2.5 px-2 text-center">
-                          <button
-                            onClick={(e) => { e.stopPropagation(); onOpenScheme(s); }}
-                            className="group relative p-2 rounded-lg text-stone-400 hover:bg-white hover:text-stone-700 hover:shadow-sm border border-transparent hover:border-stone-200 transition-all"
-                            title="Xem báo cáo"
-                          >
-                            <FileText size={14} />
-                            <span className="pointer-events-none absolute -bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded-md bg-stone-800 text-white text-[10px] opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-50">
-                              Xem báo cáo
-                            </span>
-                          </button>
+                          <div className="flex items-center justify-center gap-1">
+                            <button
+                              onClick={(e) => { e.stopPropagation(); onOpenScheme(s); }}
+                              className="group relative p-2 rounded-lg text-stone-400 hover:bg-white hover:text-stone-700 hover:shadow-sm border border-transparent hover:border-stone-200 transition-all"
+                              title="Xem báo cáo"
+                            >
+                              <FileText size={14} />
+                              <span className="pointer-events-none absolute -bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded-md bg-stone-800 text-white text-[10px] opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-50">
+                                Xem báo cáo
+                              </span>
+                            </button>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); onDeleteScheme(s.schemeNo); }}
+                              className="p-2 rounded-lg text-stone-400 hover:bg-white hover:text-rose-600 hover:shadow-sm border border-transparent hover:border-stone-200 transition-all"
+                              title="Xóa scheme"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
