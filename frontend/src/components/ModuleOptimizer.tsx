@@ -197,7 +197,7 @@ export function ModuleOptimizer({ onGoto, onSuccess, currentScheme }: { onGoto?:
                   <SeedRow k="Mác Thép" v={aiResult.optimal_action.matID} />
                   <SeedRow k="Hệ số ψ_ba" v={aiResult.optimal_action.optimal_psi_ba.toFixed(3)} />
                   <SeedRow k="Tỉ số truyền u_d" v={aiResult.optimal_action.optimal_ud.toFixed(2)} />
-                  <SeedRow k="Số răng sơ bộ z₁" v={aiResult.optimal_action.z1_gear || "?"} />
+
                   <SeedRow k="Loại bánh răng" v={aiResult.optimal_action.gear_type} />
                 </div>
               </Card>
