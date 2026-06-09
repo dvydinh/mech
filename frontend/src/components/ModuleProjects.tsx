@@ -99,6 +99,13 @@ export function ModuleProjects({ onGoto, user, onSetScheme }: { onGoto?: (k: any
   };
 
   const remove = async (id: string) => {
+    // Delete dependent records first to bypass Supabase Foreign Key Constraints (No ON DELETE CASCADE configured)
+    await supabase.from("GEAR_TRANS").delete().eq("projectID", id);
+    await supabase.from("CHAIN_TRANS").delete().eq("projectID", id);
+    await supabase.from("TRANSMISSION").delete().eq("projectID", id);
+    await supabase.from("DESIGN_SCHEME").delete().eq("projectID", id);
+    
+    // Now delete the project
     const { error } = await supabase.from("PROJECT").delete().eq("projectID", id);
     if (error) {
       setError("Lỗi xoá dự án: " + error.message);
