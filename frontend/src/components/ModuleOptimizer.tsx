@@ -13,10 +13,10 @@ export function ModuleOptimizer({ onGoto, onSuccess, currentScheme }: { onGoto?:
   const { markDone, nextOf } = useWorkflow();
   const supabase = createClient();
 
-  const [P_yc, setP_yc] = useState("4.5");
-  const [n_yc, setN_yc] = useState("50");
-  const [u_total, setU_total] = useState("28.5");
-  const [L_h, setL_h] = useState("5");
+  const [P_yc, setP_yc] = useState("5.0");
+  const [n_yc, setN_yc] = useState("100");
+  const [u_total, setU_total] = useState("10");
+  const [L_h, setL_h] = useState("15000");
   const [load_type, setLoad_type] = useState("1");
 
   const [aiResult, setAiResult] = useState<any>(null);

@@ -42,12 +42,12 @@ export function ProjectWorkspace({
   const sortedSchemes = [...project.schemes].sort((a, b) => b.date.localeCompare(a.date) || b.schemeNo - a.schemeNo);
   const last = sortedSchemes[0];
   const maxNo = project.schemes.reduce((m, s) => Math.max(m, s.schemeNo), 0);
-  const [P, setP] = useState(last ? String(last.P_dc) : "4.5");
-  const [n, setN] = useState(last ? String(last.n_dc) : "50");
-  const [L_h, setL_h] = useState(last?.L_h ? String(last.L_h) : "5");
+  const [P, setP] = useState(last ? String(last.P_dc) : "5.0");
+  const [n, setN] = useState(last ? String(last.n_dc) : "100");
+  const [L_h, setL_h] = useState(last?.L_h ? String(last.L_h) : "15000");
   const [shiftNum, setShiftNum] = useState<string>(last?.shiftNum ? String(last.shiftNum) : "2");
   const [load_type, setLoadType] = useState<string>(last?.load_type ?? "va_nhe");
-  const [u_t, setUT] = useState(last ? String(last.u_total) : "22.2");
+  const [u_t, setUT] = useState(last ? String(last.u_total) : "10");
 
   const build = (): Scheme => ({
     schemeNo: maxNo + 1,
