@@ -134,7 +134,7 @@ export function ProjectWorkspace({
               <Field label="Công suất trục công tác P_dc" unit="kW" value={P} onChange={setP} error={errs.P} />
               <Field label="Số vòng quay trục công tác n_dc" unit="vg/ph" value={n} onChange={setN} error={errs.n} />
               <Field label="Tỉ số truyền tổng u_total" value={u_t} onChange={setUT} error={errs.u} />
-              <Field label="Thời gian phục vụ L_h" unit="năm" value={L_h} onChange={setL_h} error={errs.L} />
+              <Field label="Thời gian phục vụ L_h" unit="giờ" value={L_h} onChange={setL_h} error={errs.L} />
               <Select
                 label="Số ca làm việc"
                 value={shiftNum}
