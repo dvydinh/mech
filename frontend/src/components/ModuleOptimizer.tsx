@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Header } from "./Header";
 import { Card, Badge, Button, Field } from "./ui-bits";
 import { Sparkles, Brain, Cog, Link2, Play, ArrowRight, AlertCircle, Lollipop } from "lucide-react";
@@ -20,6 +20,29 @@ export function ModuleOptimizer({ onGoto, onSuccess, currentScheme }: { onGoto?:
   const [load_type, setLoad_type] = useState("1");
 
   const [aiResult, setAiResult] = useState<any>(null);
+
+  useEffect(() => {
+    if (currentScheme) {
+      const loadData = async () => {
+        const { data } = await supabase
+          .from("DESIGN_SCHEME")
+          .select("P_dc, n_dc, u_total, L_h, load_type")
+          .eq("projectID", currentScheme.projectID)
+          .eq("schemeNo", currentScheme.schemeNo)
+          .single();
+        if (data) {
+          if (data.P_dc) setP_yc(String(data.P_dc));
+          if (data.n_dc) setN_yc(String(data.n_dc));
+          if (data.u_total) setU_total(String(data.u_total));
+          if (data.L_h) setL_h(String(data.L_h));
+          if (data.load_type) {
+             setLoad_type(data.load_type === "Tĩnh" ? "0" : data.load_type === "Va đập mạnh" ? "2" : "1");
+          }
+        }
+      };
+      loadData();
+    }
+  }, [currentScheme]);
 
   const run = async () => {
     setLoading(true);
