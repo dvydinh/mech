@@ -263,25 +263,33 @@ export function ModuleProjects({ onGoto, user, onSetScheme }: { onGoto?: (k: any
               {projects.map((p) => (
                 <div
                   key={p.projectID}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl border border-stone-200 hover:bg-gradient-to-r hover:from-yellow-50 hover:to-pink-50 cursor-pointer transition-colors"
-                  onClick={() => setOpenProjectId(p.projectID)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl border border-stone-200 hover:bg-stone-50 transition-colors"
                 >
                   <FolderOpen size={15} className="text-stone-500 shrink-0" />
-                  <div className="min-w-0 flex-1">
+                  <div 
+                    className="min-w-0 flex-1 cursor-pointer hover:opacity-70 transition-opacity"
+                    onClick={() => setOpenProjectId(p.projectID)}
+                    title="Mở dự án này"
+                  >
                     <div className="text-stone-800 truncate" style={{ fontSize: 14 }}>{p.projectName}</div>
                     <div className="text-stone-500 truncate" style={{ fontSize: 12 }}>{p.projectDescription}</div>
                   </div>
                   <Badge tone="stone">{p.schemes.length} scheme</Badge>
                   <span className="text-stone-400 hidden md:inline" style={{ fontSize: 12 }}>{p.createdDate}</span>
                   <button
-                    onPointerDown={(e) => e.stopPropagation()}
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); remove(p.projectID); }}
-                    className="p-1.5 rounded-md text-stone-400 hover:bg-stone-100 hover:text-stone-600 relative z-10"
-                    aria-label="Xoá"
+                    onClick={() => setOpenProjectId(p.projectID)}
+                    className="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-600 hover:bg-stone-200 text-xs font-medium"
                   >
-                    <Trash2 size={13} />
+                    Mở
                   </button>
-                  <ChevronRight size={14} className="text-stone-400" />
+                  <button
+                    onClick={() => remove(p.projectID)}
+                    className="p-2 rounded-lg text-rose-400 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+                    aria-label="Xoá"
+                    title="Xóa dự án"
+                  >
+                    <Trash2 size={16} />
+                  </button>
                 </div>
               ))}
             </div>

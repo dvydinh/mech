@@ -197,37 +197,31 @@ export function ProjectWorkspace({
                     {sortedSchemes.map((s) => (
                       <tr
                         key={s.schemeNo}
-                        onClick={() => onOpenScheme(s)}
-                        className="border-b border-stone-100 hover:bg-gradient-to-r hover:from-yellow-50/60 hover:to-pink-50/60 cursor-pointer"
+                        className="border-b border-stone-100 hover:bg-stone-50 transition-colors"
                       >
-                        <td className="py-2.5 px-2 text-stone-800 font-mono font-bold" style={{ fontSize: 13 }}>#{s.schemeNo}</td>
-                        <td className="py-2.5 px-2 text-stone-500" style={{ fontSize: 12 }}>{s.date}</td>
-                        <td className="py-2.5 px-2 text-right text-stone-700 font-mono" style={{ fontSize: 12 }}>{s.P_dc.toFixed(1)}</td>
-                        <td className="py-2.5 px-2 text-right text-stone-700 font-mono" style={{ fontSize: 12 }}>{s.n_dc}</td>
-                        <td className="py-2.5 px-2 text-right text-stone-700 font-mono" style={{ fontSize: 12 }}>{s.u_total.toFixed(1)}</td>
-                        <td className="py-2.5 px-2 text-center">
+                        <td className="py-2.5 px-2 text-stone-800 font-mono font-bold cursor-pointer hover:underline" onClick={() => onOpenScheme(s)} style={{ fontSize: 13 }} title="Mở báo cáo">#{s.schemeNo}</td>
+                        <td className="py-2.5 px-2 text-stone-500 cursor-pointer hover:underline" onClick={() => onOpenScheme(s)} style={{ fontSize: 12 }} title="Mở báo cáo">{s.date}</td>
+                        <td className="py-2.5 px-2 text-right text-stone-700 font-mono cursor-pointer" onClick={() => onOpenScheme(s)} style={{ fontSize: 12 }}>{s.P_dc.toFixed(1)}</td>
+                        <td className="py-2.5 px-2 text-right text-stone-700 font-mono cursor-pointer" onClick={() => onOpenScheme(s)} style={{ fontSize: 12 }}>{s.n_dc}</td>
+                        <td className="py-2.5 px-2 text-right text-stone-700 font-mono cursor-pointer" onClick={() => onOpenScheme(s)} style={{ fontSize: 12 }}>{s.u_total.toFixed(1)}</td>
+                        <td className="py-2.5 px-2 text-center cursor-pointer" onClick={() => onOpenScheme(s)}>
                           <Badge tone={statusTone[s.status]}>{statusLabel[s.status]}</Badge>
                         </td>
                         <td className="py-2.5 px-2 text-center">
                           <div className="flex items-center justify-center gap-1">
                             <button
-                              onPointerDown={(e) => e.stopPropagation()}
-                              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onOpenScheme(s); }}
-                              className="group relative z-10 p-2 rounded-lg text-stone-400 hover:bg-white hover:text-stone-700 hover:shadow-sm border border-transparent hover:border-stone-200 transition-all"
+                              onClick={() => onOpenScheme(s)}
+                              className="group relative p-2 rounded-lg text-stone-500 bg-stone-100 hover:bg-stone-200 transition-all font-medium text-xs flex items-center gap-1"
                               title="Xem báo cáo"
                             >
-                              <FileText size={14} />
-                              <span className="pointer-events-none absolute -bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded-md bg-stone-800 text-white text-[10px] opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-50">
-                                Xem báo cáo
-                              </span>
+                              Mở
                             </button>
                             <button
-                              onPointerDown={(e) => e.stopPropagation()}
-                              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDeleteScheme(s.schemeNo); }}
-                              className="relative z-10 p-2 rounded-lg text-stone-400 hover:bg-white hover:text-rose-600 hover:shadow-sm border border-transparent hover:border-stone-200 transition-all"
+                              onClick={() => onDeleteScheme(s.schemeNo)}
+                              className="p-2 rounded-lg text-rose-400 hover:bg-rose-50 hover:text-rose-600 transition-all"
                               title="Xóa scheme"
                             >
-                              <Trash2 size={14} />
+                              <Trash2 size={16} />
                             </button>
                           </div>
                         </td>
