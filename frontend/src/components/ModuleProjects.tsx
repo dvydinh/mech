@@ -9,6 +9,13 @@ import { createClient } from "@/utils/supabase/client";
 const statusTone = { draft: "stone", ok: "green", fail: "rose" } as const;
 const statusLabel = { draft: "Nháp", ok: "Đạt", fail: "Chưa đạt" } as const;
 
+function getProjectStatus(schemes: Scheme[]): { tone: "stone" | "green" | "rose" | "amber", label: string } {
+  if (!schemes || schemes.length === 0) return { tone: "stone", label: "Trống" };
+  if (schemes.some(s => s.status === "ok")) return { tone: "green", label: "Hoàn thành" };
+  if (schemes.some(s => s.status === "fail")) return { tone: "rose", label: "Chưa đạt" };
+  return { tone: "amber", label: "Đang nháp" };
+}
+
 export function ModuleProjects({ onGoto, user, onSetScheme }: { onGoto?: (k: any) => void; user?: any; onSetScheme?: (s: {projectID: number; schemeNo: number} | null) => void }) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [creating, setCreating] = useState(false);
@@ -274,7 +281,10 @@ export function ModuleProjects({ onGoto, user, onSetScheme }: { onGoto?: (k: any
                     <div className="text-stone-800 truncate" style={{ fontSize: 14 }}>{p.projectName}</div>
                     <div className="text-stone-500 truncate" style={{ fontSize: 12 }}>{p.projectDescription}</div>
                   </div>
-                  <Badge tone="stone">{p.schemes.length} scheme</Badge>
+                  <div className="flex gap-2">
+                    <Badge tone="stone">{p.schemes.length} scheme</Badge>
+                    <Badge tone={getProjectStatus(p.schemes).tone}>{getProjectStatus(p.schemes).label}</Badge>
+                  </div>
                   <span className="text-stone-400 hidden md:inline" style={{ fontSize: 12 }}>{p.createdDate}</span>
                   <button
                     onClick={() => setOpenProjectId(p.projectID)}
