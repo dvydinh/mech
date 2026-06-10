@@ -197,7 +197,10 @@ export function ProjectWorkspace({
                     {sortedSchemes.map((s) => (
                       <tr
                         key={s.schemeNo}
-                        onClick={() => onOpenScheme(s)}
+                        onClick={(e) => {
+                          if ((e.target as HTMLElement).closest('button')) return;
+                          onOpenScheme(s);
+                        }}
                         className="border-b border-stone-100 hover:bg-gradient-to-r hover:from-yellow-50/60 hover:to-pink-50/60 cursor-pointer"
                       >
                         <td className="py-2.5 px-2 text-stone-800 font-mono font-bold" style={{ fontSize: 13 }}>#{s.schemeNo}</td>

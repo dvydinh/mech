@@ -260,7 +260,10 @@ export function ModuleProjects({ onGoto, user, onSetScheme }: { onGoto?: (k: any
                 <div
                   key={p.projectID}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl border border-stone-200 hover:bg-gradient-to-r hover:from-yellow-50 hover:to-pink-50 cursor-pointer transition-colors"
-                  onClick={() => setOpenProjectId(p.projectID)}
+                  onClick={(e) => {
+                    if ((e.target as HTMLElement).closest('button')) return;
+                    setOpenProjectId(p.projectID);
+                  }}
                 >
                   <FolderOpen size={15} className="text-stone-500 shrink-0" />
                   <div className="min-w-0 flex-1">
