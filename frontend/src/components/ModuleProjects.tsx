@@ -99,10 +99,16 @@ export function ModuleProjects({ onGoto, user, onSetScheme }: { onGoto?: (k: any
   };
 
   const remove = async (id: string | number) => {
+    // Manually delete dependencies just in case ON DELETE CASCADE is not configured on the live DB
+    await supabase.from("GEAR_TRANS").delete().eq("projectID", id);
+    await supabase.from("CHAIN_TRANS").delete().eq("projectID", id);
+    await supabase.from("TRANSMISSION").delete().eq("projectID", id);
+    await supabase.from("DESIGN_SCHEME").delete().eq("projectID", id);
+
     const { error } = await supabase.from("PROJECT").delete().eq("projectID", id);
     if (error) {
       console.error("Delete Project Error:", error);
-      alert("Lỗi xoá dự án: " + error.message);
+      alert("Lỗi xoá dự án (Database): " + error.message);
       setError("Lỗi xoá dự án: " + error.message);
     } else {
       setProjects((prev) => prev.filter((p) => p.projectID != id));
@@ -111,22 +117,26 @@ export function ModuleProjects({ onGoto, user, onSetScheme }: { onGoto?: (k: any
   };
 
   const removeScheme = async (projectID: string | number, schemeNo: number) => {
-    const { error: e1 } = await supabase.from("GEAR_TRANS").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
-    const { error: e2 } = await supabase.from("CHAIN_TRANS").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
-    const { error: e3 } = await supabase.from("TRANSMISSION").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
-    const { error: e4 } = await supabase.from("DESIGN_SCHEME").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
-    
-    if (e4) {
-      console.error("Delete Scheme Error:", e4);
-      alert("Lỗi xoá scheme: " + e4.message);
-      return;
-    }
+    try {
+      await supabase.from("GEAR_TRANS").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
+      await supabase.from("CHAIN_TRANS").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
+      await supabase.from("TRANSMISSION").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
+      const { error: e4 } = await supabase.from("DESIGN_SCHEME").delete().eq("projectID", projectID).eq("schemeNo", schemeNo);
+      
+      if (e4) {
+        console.error("Delete Scheme Error:", e4);
+        alert("Lỗi xoá scheme (Database): " + e4.message);
+        return;
+      }
 
-    setProjects((prev) =>
-      prev.map((p) =>
-        p.projectID == projectID ? { ...p, schemes: p.schemes.filter(s => s.schemeNo !== schemeNo) } : p
-      )
-    );
+      setProjects((prev) =>
+        prev.map((p) =>
+          p.projectID == projectID ? { ...p, schemes: p.schemes.filter(s => s.schemeNo !== schemeNo) } : p
+        )
+      );
+    } catch (err: any) {
+      alert("Lỗi code (Exception) khi xoá scheme: " + err.message);
+    }
   };
 
   const addScheme = async (projectID: string, s: Scheme) => {
