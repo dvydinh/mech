@@ -197,10 +197,7 @@ export function ProjectWorkspace({
                     {sortedSchemes.map((s) => (
                       <tr
                         key={s.schemeNo}
-                        onClick={(e) => {
-                          if ((e.target as HTMLElement).closest('button')) return;
-                          onOpenScheme(s);
-                        }}
+                        onClick={() => onOpenScheme(s)}
                         className="border-b border-stone-100 hover:bg-gradient-to-r hover:from-yellow-50/60 hover:to-pink-50/60 cursor-pointer"
                       >
                         <td className="py-2.5 px-2 text-stone-800 font-mono font-bold" style={{ fontSize: 13 }}>#{s.schemeNo}</td>
@@ -214,8 +211,9 @@ export function ProjectWorkspace({
                         <td className="py-2.5 px-2 text-center">
                           <div className="flex items-center justify-center gap-1">
                             <button
-                              onClick={(e) => { e.stopPropagation(); onOpenScheme(s); }}
-                              className="group relative p-2 rounded-lg text-stone-400 hover:bg-white hover:text-stone-700 hover:shadow-sm border border-transparent hover:border-stone-200 transition-all"
+                              onPointerDown={(e) => e.stopPropagation()}
+                              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onOpenScheme(s); }}
+                              className="group relative z-10 p-2 rounded-lg text-stone-400 hover:bg-white hover:text-stone-700 hover:shadow-sm border border-transparent hover:border-stone-200 transition-all"
                               title="Xem báo cáo"
                             >
                               <FileText size={14} />
@@ -224,8 +222,9 @@ export function ProjectWorkspace({
                               </span>
                             </button>
                             <button
-                              onClick={(e) => { e.stopPropagation(); onDeleteScheme(s.schemeNo); }}
-                              className="p-2 rounded-lg text-stone-400 hover:bg-white hover:text-rose-600 hover:shadow-sm border border-transparent hover:border-stone-200 transition-all"
+                              onPointerDown={(e) => e.stopPropagation()}
+                              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onDeleteScheme(s.schemeNo); }}
+                              className="relative z-10 p-2 rounded-lg text-stone-400 hover:bg-white hover:text-rose-600 hover:shadow-sm border border-transparent hover:border-stone-200 transition-all"
                               title="Xóa scheme"
                             >
                               <Trash2 size={14} />

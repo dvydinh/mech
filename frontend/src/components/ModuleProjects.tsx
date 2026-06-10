@@ -99,20 +99,24 @@ export function ModuleProjects({ onGoto, user, onSetScheme }: { onGoto?: (k: any
   };
 
   const remove = async (id: string | number) => {
-    // Manually delete dependencies just in case ON DELETE CASCADE is not configured on the live DB
-    await supabase.from("GEAR_TRANS").delete().eq("projectID", id);
-    await supabase.from("CHAIN_TRANS").delete().eq("projectID", id);
-    await supabase.from("TRANSMISSION").delete().eq("projectID", id);
-    await supabase.from("DESIGN_SCHEME").delete().eq("projectID", id);
-
-    const { error } = await supabase.from("PROJECT").delete().eq("projectID", id);
-    if (error) {
-      console.error("Delete Project Error:", error);
-      alert("Lỗi xoá dự án (Database): " + error.message);
-      setError("Lỗi xoá dự án: " + error.message);
-    } else {
-      setProjects((prev) => prev.filter((p) => p.projectID != id));
-      if (openProjectId == id) setOpenProjectId(null);
+    try {
+      // Delete dependencies manually to bypass missing CASCADE
+      const { error: e1 } = await supabase.from("GEAR_TRANS").delete().eq("projectID", id);
+      const { error: e2 } = await supabase.from("CHAIN_TRANS").delete().eq("projectID", id);
+      const { error: e3 } = await supabase.from("TRANSMISSION").delete().eq("projectID", id);
+      const { error: e4 } = await supabase.from("DESIGN_SCHEME").delete().eq("projectID", id);
+      
+      const { error } = await supabase.from("PROJECT").delete().eq("projectID", id);
+      if (error) {
+        console.error("Delete Project Error:", error);
+        alert("Lỗi xoá dự án (Database): " + error.message);
+        setError("Lỗi xoá dự án: " + error.message);
+      } else {
+        setProjects((prev) => prev.filter((p) => p.projectID != id));
+        if (openProjectId == id) setOpenProjectId(null);
+      }
+    } catch (err: any) {
+      alert("Lỗi code (Exception) khi xoá dự án: " + err.message);
     }
   };
 
@@ -260,10 +264,7 @@ export function ModuleProjects({ onGoto, user, onSetScheme }: { onGoto?: (k: any
                 <div
                   key={p.projectID}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl border border-stone-200 hover:bg-gradient-to-r hover:from-yellow-50 hover:to-pink-50 cursor-pointer transition-colors"
-                  onClick={(e) => {
-                    if ((e.target as HTMLElement).closest('button')) return;
-                    setOpenProjectId(p.projectID);
-                  }}
+                  onClick={() => setOpenProjectId(p.projectID)}
                 >
                   <FolderOpen size={15} className="text-stone-500 shrink-0" />
                   <div className="min-w-0 flex-1">
@@ -273,8 +274,9 @@ export function ModuleProjects({ onGoto, user, onSetScheme }: { onGoto?: (k: any
                   <Badge tone="stone">{p.schemes.length} scheme</Badge>
                   <span className="text-stone-400 hidden md:inline" style={{ fontSize: 12 }}>{p.createdDate}</span>
                   <button
-                    onClick={(e) => { e.stopPropagation(); remove(p.projectID); }}
-                    className="p-1.5 rounded-md text-stone-400 hover:bg-stone-100 hover:text-stone-600"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); remove(p.projectID); }}
+                    className="p-1.5 rounded-md text-stone-400 hover:bg-stone-100 hover:text-stone-600 relative z-10"
                     aria-label="Xoá"
                   >
                     <Trash2 size={13} />
